@@ -6,7 +6,7 @@
 
 <div align="center">
 
-![Game Screenshot](assets/images/screenshot.png)
+![Game Screenshot](assets/images/Screenshot.png)
 
 **Класична гра у футуристичному кіберпанк стилі**
 
