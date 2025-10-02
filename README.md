@@ -2,7 +2,7 @@
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/dneese/cyberpunk-tic-tac-toe/blob/main/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/dneese/cyberpunk-tic-tac-toe.svg)](https://github.com/dneese/cyberpunk-tic-tac-toe/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/yourusername/cyberpunk-tic-tac-toe.svg)](https://github.com/dneese/cyberpunk-tic-tac-toe/network)
+[![GitHub forks](https://img.shields.io/github/forks/dneese/cyberpunk-tic-tac-toe.svg)](https://github.com/dneese/cyberpunk-tic-tac-toe/network)
 
 <div align="center">
 
@@ -10,7 +10,7 @@
 
 **Класична гра у футуристичному кіберпанк стилі**
 
-[Грати онлайн](https://dneese.github.io/cyberpunk-tic-tac-toe) • [Звіт про помилку](https://github.com/yourusername/cyberpunk-tic-tac-toe/issues) • [Запропонувати функцію](https://github.com/yourusername/cyberpunk-tic-tac-toe/issues)
+[Грати онлайн](https://dneese.github.io/cyberpunk-tic-tac-toe) • [Звіт про помилку](https://github.com/dneese/cyberpunk-tic-tac-toe/issues) • [Запропонувати функцію](https://github.com/dneese/cyberpunk-tic-tac-toe/issues)
 
 </div>
 
@@ -47,7 +47,7 @@
 ### Локальна версія
 ```bash
 # Клонуй репозиторій
-git clone https://github.com/yourusername/cyberpunk-tic-tac-toe.git
+git clone https://github.com/dneese/cyberpunk-tic-tac-toe.git
 
 # Перейди в папку проєкту
 cd cyberpunk-tic-tac-toe
