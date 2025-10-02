@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кіберпанк Хрестики-Ноліки</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --neon-cyan: #0ff;
+            --neon-pink: #f0f;
+            --neon-purple: #906cff;
+            --neon-green: #0f0;
+            --dark-bg: #0a0a16;
+            --darker-bg: #050510;
+            --grid-color: #1a1a2e;
+        }
+
+        body {
+            background: var(--darker-bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', monospace;
+            color: white;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px var(--neon-cyan);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+
+        .player-turn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: rgba(10, 10, 30, 0.7);
+            border-radius: 8px;
+            border: 1px solid var(--neon-purple);
+            box-shadow: 0 0 10px rgba(144, 108, 255, 0.3);
+        }
+
+        .player-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .player-x {
+            background: var(--neon-cyan);
+            color: var(--dark-bg);
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .player-o {
+            background: var(--neon-pink);
+            color: var(--dark-bg);
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .score {
+            display: flex;
+            gap: 15px;
+        }
+
+        .score-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 15px;
+            background: rgba(10, 10, 30, 0.7);
+            border-radius: 8px;
+            border: 1px solid var(--neon-purple);
+            box-shadow: 0 0 10px rgba(144, 108, 255, 0.3);
+        }
+
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .game-board {
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1/1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 10px;
+            background: var(--grid-color);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--neon-purple);
+            box-shadow: 
+                0 0 20px rgba(144, 108, 255, 0.3),
+                inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .cell {
+            background: rgba(20, 20, 40, 0.8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(144, 108, 255, 0.3);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .cell:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                inset 0 0 10px rgba(0, 0, 0, 0.5),
+                0 5px 15px rgba(144, 108, 255, 0.5);
+            border-color: var(--neon-cyan);
+        }
+
+        .cell.x {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .cell.o {
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .cell.win {
+            animation: winPulse 1.5s infinite;
+            background: rgba(144, 108, 255, 0.2);
+            border-color: var(--neon-green);
+        }
+
+        @keyframes winPulse {
+            0% { transform: scale(1); box-shadow: 0 0 10px var(--neon-green); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px var(--neon-green); }
+            100% { transform: scale(1); box-shadow: 0 0 10px var(--neon-green); }
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 20px;
+        }
+
+        .cyber-button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-purple), #6a00ff);
+            color: white;
+            box-shadow: 0 0 15px rgba(144, 108, 255, 0.5);
+            border: 1px solid var(--neon-cyan);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(144, 108, 255, 0.8);
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 15px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--neon-purple);
+            border-radius: 6px;
+            background: rgba(20, 20, 40, 0.7);
+            color: var(--neon-cyan);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .mode-btn.active {
+            background: var(--neon-purple);
+            color: white;
+            box-shadow: 0 0 15px rgba(144, 108, 255, 0.7);
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 15px;
+        }
+
+        .difficulty-btn {
+            flex: 1;
+            padding: 8px 10px;
+            border: 1px solid var(--neon-purple);
+            border-radius: 4px;
+            background: rgba(20, 20, 40, 0.7);
+            color: var(--neon-cyan);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        .difficulty-btn.active {
+            background: var(--neon-purple);
+            color: white;
+            box-shadow: 0 0 10px rgba(144, 108, 255, 0.7);
+        }
+
+        .status-message {
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-align: center;
+            min-height: 30px;
+            margin: 15px 0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: rgba(20, 20, 40, 0.7);
+            border: 1px solid var(--neon-purple);
+            box-shadow: 0 0 15px rgba(144, 108, 255, 0.3);
+            width: 100%;
+            max-width: 400px;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .win-message {
+            background: rgba(144, 108, 255, 0.2);
+            border-color: var(--neon-green);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            color: var(--neon-green);
+            animation: winPulse 2s infinite;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .game-board {
+                gap: 8px;
+                padding: 10px;
+            }
+            
+            .cell {
+                font-size: 2.5rem;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+            
+            .score {
+                width: 100%;
+                justify-content: space-around;
+            }
+        }
+
+        @media (max-width: 350px) {
+            .mode-selector, .difficulty-selector {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>КІБЕРПАНК</h1>
+        </div>
+        
+        <div class="mode-selector">
+            <button class="mode-btn active" id="mode-1p">Грати з AI</button>
+            <button class="mode-btn" id="mode-2p">Два гравці</button>
+        </div>
+        
+        <div class="difficulty-selector" id="difficulty-container">
+            <button class="difficulty-btn active" data-difficulty="easy">Легко</button>
+            <button class="difficulty-btn" data-difficulty="medium">Середньо</button>
+            <button class="difficulty-btn" data-difficulty="hard">Складно</button>
+        </div>
+        
+        <div class="game-info">
+            <div class="player-turn">
+                <div class="player-icon player-x">X</div>
+                <span>Ваш хід</span>
+            </div>
+            
+            <div class="score">
+                <div class="score-item">
+                    <div class="score-value" id="score-x">0</div>
+                    <div class="score-label">Перемоги X</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-value" id="score-o">0</div>
+                    <div class="score-label">Перемоги O</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="game-board" id="board"></div>
+        
+        <div class="status-message" id="status">Ваш хід, Гравець X</div>
+        
+        <div class="controls">
+            <button class="cyber-button btn-primary" id="reset">
+                <span>Нова гра</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Генератор звуків
+        class SoundGenerator {
+            constructor() {
+                this.audioContext = null;
+                this.init();
+            }
+            
+            init() {
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                } catch (e) {
+                    console.log("Web Audio API не підтримується");
+                }
+            }
+            
+            playTone(frequency, duration, type = 'sine', volume = 0.3) {
+                if (!this.audioContext) return;
+                
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(this.audioContext.destination);
+                
+                oscillator.frequency.value = frequency;
+                oscillator.type = type;
+                
+                gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(volume, this.audioContext.currentTime + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration);
+                
+                oscillator.start(this.audioContext.currentTime);
+                oscillator.stop(this.audioContext.currentTime + duration);
+            }
+            
+            playPlaceSound() {
+                this.playTone(523.25, 0.1, 'square');
+            }
+            
+            playWinSound() {
+                this.playTone(523.25, 0.1, 'square');
+                setTimeout(() => this.playTone(659.25, 0.1, 'square'), 100);
+                setTimeout(() => this.playTone(783.99, 0.2, 'square'), 200);
+            }
+            
+            playDrawSound() {
+                this.playTone(392.00, 0.3, 'sawtooth');
+            }
+        }
+
+        // Ігрова логіка
+        class TicTacToe {
+            constructor() {
+                this.board = Array(9).fill('');
+                this.currentPlayer = 'X';
+                this.gameOver = false;
+                this.vsComputer = true;
+                this.difficulty = 'medium';
+                this.scores = { X: 0, O: 0 };
+                this.sound = new SoundGenerator();
+                this.init();
+            }
+            
+            init() {
+                this.drawBoard();
+                this.setupEventListeners();
+                this.updateStatus();
+            }
+            
+            drawBoard() {
+                const boardElement = document.getElementById('board');
+                boardElement.innerHTML = '';
+                
+                for (let i = 0; i < 9; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.index = i;
+                    
+                    if (this.board[i]) {
+                        cell.textContent = this.board[i];
+                        cell.classList.add(this.board[i].toLowerCase());
+                    }
+                    
+                    cell.addEventListener('click', () => this.handleCellClick(i));
+                    boardElement.appendChild(cell);
+                }
+            }
+            
+            handleCellClick(index) {
+                if (this.gameOver || this.board[index] !== '') return;
+                
+                if (this.vsComputer && this.currentPlayer === 'O') return;
+                
+                this.makeMove(index);
+                
+                if (this.vsComputer && !this.gameOver && this.currentPlayer === 'O') {
+                    setTimeout(() => this.computerMove(), 500);
+                }
+            }
+            
+            makeMove(index) {
+                this.board[index] = this.currentPlayer;
+                this.drawBoard();
+                this.sound.playPlaceSound();
+                
+                if (this.checkWinner()) {
+                    this.scores[this.currentPlayer]++;
+                    this.updateScores();
+                    this.gameOver = true;
+                    this.sound.playWinSound();
+                    this.highlightWinningCells();
+                    this.updateStatus(`${this.currentPlayer} переміг!`);
+                } else if (this.isBoardFull()) {
+                    this.gameOver = true;
+                    this.sound.playDrawSound();
+                    this.updateStatus('Нічия!');
+                } else {
+                    this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
+                    this.updateStatus();
+                }
+            }
+            
+            computerMove() {
+                const availableMoves = this.board
+                    .map((cell, index) => cell === '' ? index : null)
+                    .filter(cell => cell !== null);
+                
+                if (availableMoves.length === 0) return;
+                
+                let move;
+                
+                switch(this.difficulty) {
+                    case 'easy':
+                        move = this.findWinningMove('O') || 
+                              (Math.random() < 0.5 ? this.findWinningMove('X') : null) ||
+                              availableMoves[Math.floor(Math.random() * availableMoves.length)];
+                        break;
+                    case 'medium':
+                        move = this.findWinningMove('O') || 
+                              this.findWinningMove('X') || 
+                              (Math.random() < 0.7 ? this.findBestMove() : availableMoves[Math.floor(Math.random() * availableMoves.length)]);
+                        break;
+                    case 'hard':
+                        move = this.findWinningMove('O') || 
+                              this.findWinningMove('X') || 
+                              this.findBestMove();
+                        break;
+                }
+                
+                this.makeMove(move);
+            }
+            
+            findWinningMove(player) {
+                for (let i = 0; i < 9; i++) {
+                    if (this.board[i] === '') {
+                        this.board[i] = player;
+                        const hasWon = this.checkWinner();
+                        this.board[i] = '';
+                        
+                        if (hasWon) return i;
+                    }
+                }
+                return null;
+            }
+            
+            findBestMove() {
+                const center = 4;
+                const corners = [0, 2, 6, 8];
+                const edges = [1, 3, 5, 7];
+                
+                if (this.board[center] === '') return center;
+                
+                for (let corner of corners) {
+                    if (this.board[corner] === '') return corner;
+                }
+                
+                for (let edge of edges) {
+                    if (this.board[edge] === '') return edge;
+                }
+                
+                const availableMoves = this.board
+                    .map((cell, index) => cell === '' ? index : null)
+                    .filter(cell => cell !== null);
+                
+                return availableMoves[0];
+            }
+            
+            checkWinner() {
+                const winPatterns = [
+                    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                    [0, 4, 8], [2, 4, 6]
+                ];
+                
+                for (let pattern of winPatterns) {
+                    const [a, b, c] = pattern;
+                    if (this.board[a] && this.board[a] === this.board[b] && this.board[a] === this.board[c]) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+            isBoardFull() {
+                return this.board.every(cell => cell !== '');
+            }
+            
+            highlightWinningCells() {
+                const winPatterns = [
+                    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                    [0, 4, 8], [2, 4, 6]
+                ];
+                
+                for (const pattern of winPatterns) {
+                    const [a, b, c] = pattern;
+                    if (this.board[a] && this.board[a] === this.board[b] && this.board[a] === this.board[c]) {
+                        const cells = document.querySelectorAll('.cell');
+                        cells[a].classList.add('win');
+                        cells[b].classList.add('win');
+                        cells[c].classList.add('win');
+                        break;
+                    }
+                }
+            }
+            
+            updateStatus(message = null) {
+                const statusElement = document.getElementById('status');
+                
+                if (message) {
+                    statusElement.textContent = message;
+                    if (message.includes('переміг') || message.includes('Нічия')) {
+                        statusElement.classList.add('win-message');
+                    } else {
+                        statusElement.classList.remove('win-message');
+                    }
+                    return;
+                }
+                
+                if (this.gameOver) return;
+                
+                const playerText = this.currentPlayer === 'X' ? 'X' : 'O';
+                const vsComputerText = this.vsComputer && this.currentPlayer === 'O' ? ' (AI)' : '';
+                statusElement.textContent = `Хід гравця ${playerText}${vsComputerText}`;
+                statusElement.classList.remove('win-message');
+                
+                const playerTurn = document.querySelector('.player-turn');
+                const playerIcon = playerTurn.querySelector('.player-icon');
+                
+                playerIcon.className = 'player-icon';
+                playerIcon.classList.add(this.currentPlayer === 'X' ? 'player-x' : 'player-o');
+                playerIcon.textContent = this.currentPlayer;
+            }
+            
+            updateScores() {
+                document.getElementById('score-x').textContent = this.scores.X;
+                document.getElementById('score-o').textContent = this.scores.O;
+            }
+            
+            resetGame() {
+                this.board = Array(9).fill('');
+                this.currentPlayer = 'X';
+                this.gameOver = false;
+                this.drawBoard();
+                this.updateStatus();
+            }
+            
+            setDifficulty(level) {
+                this.difficulty = level;
+            }
+            
+            setupEventListeners() {
+                document.getElementById('reset').addEventListener('click', () => this.resetGame());
+                
+                document.getElementById('mode-1p').addEventListener('click', () => {
+                    this.vsComputer = true;
+                    document.getElementById('mode-1p').classList.add('active');
+                    document.getElementById('mode-2p').classList.remove('active');
+                    document.getElementById('difficulty-container').style.display = 'flex';
+                    this.resetGame();
+                });
+                
+                document.getElementById('mode-2p').addEventListener('click', () => {
+                    this.vsComputer = false;
+                    document.getElementById('mode-1p').classList.remove('active');
+                    document.getElementById('mode-2p').classList.add('active');
+                    document.getElementById('difficulty-container').style.display = 'none';
+                    this.resetGame();
+                });
+                
+                const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+                difficultyButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        difficultyButtons.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        this.setDifficulty(button.dataset.difficulty);
+                    });
+                });
+            }
+        }
+
+        // Ініціалізація гри
+        document.addEventListener('DOMContentLoaded', () => {
+            new TicTacToe();
+        });
+    </script>
+</body>
+</html>
