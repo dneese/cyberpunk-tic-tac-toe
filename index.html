@@ -21,6 +21,8 @@
             --dark-bg: #0a0a16;
             --darker-bg: #050510;
             --grid-color: #1a1a2e;
+            --text-glow: 0 0 10px currentColor;
+            --box-glow: 0 0 15px currentColor;
         }
 
         body {
@@ -34,6 +36,9 @@
             color: white;
             padding: 20px;
             overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(100, 20, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 0, 200, 0.1) 0%, transparent 20%);
         }
 
         .container {
@@ -45,9 +50,30 @@
             gap: 20px;
         }
 
+        .cyber-border {
+            position: relative;
+            padding: 3px;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink), var(--neon-purple));
+            border-radius: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 20px rgba(100, 20, 255, 0.5);
+        }
+
+        .cyber-border::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--dark-bg);
+            border-radius: 10px;
+            z-index: -1;
+        }
+
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            padding: 15px 30px;
         }
 
         h1 {
@@ -57,17 +83,19 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 0 10px var(--neon-cyan);
-            margin-bottom: 10px;
+            text-shadow: var(--text-glow);
             letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
         }
 
         .game-info {
             display: flex;
             justify-content: space-between;
             width: 100%;
-            max-width: 400px;
-            margin-bottom: 20px;
+            max-width: 450px;
+            margin-bottom: 10px;
+            gap: 15px;
         }
 
         .player-turn {
@@ -79,6 +107,7 @@
             border-radius: 8px;
             border: 1px solid var(--neon-purple);
             box-shadow: 0 0 10px rgba(144, 108, 255, 0.3);
+            flex: 1;
         }
 
         .player-icon {
@@ -95,25 +124,32 @@
         .player-x {
             background: var(--neon-cyan);
             color: var(--dark-bg);
-            box-shadow: 0 0 10px var(--neon-cyan);
+            box-shadow: var(--box-glow);
         }
 
         .player-o {
             background: var(--neon-pink);
             color: var(--dark-bg);
-            box-shadow: 0 0 10px var(--neon-pink);
+            box-shadow: var(--box-glow);
+        }
+
+        .player-text {
+            color: var(--neon-cyan);
+            font-weight: 700;
+            font-size: 1rem;
+            text-shadow: var(--text-glow);
         }
 
         .score {
             display: flex;
-            gap: 15px;
+            gap: 10px;
         }
 
         .score-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 10px 15px;
+            padding: 8px 15px;
             background: rgba(10, 10, 30, 0.7);
             border-radius: 8px;
             border: 1px solid var(--neon-purple);
@@ -124,12 +160,13 @@
             font-size: 1.5rem;
             font-weight: bold;
             color: var(--neon-green);
-            text-shadow: 0 0 10px var(--neon-green);
+            text-shadow: var(--text-glow);
         }
 
         .score-label {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             opacity: 0.8;
+            color: var(--neon-cyan);
         }
 
         .game-board {
@@ -139,7 +176,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
-            gap: 10px;
+            gap: 8px;
             background: var(--grid-color);
             padding: 15px;
             border-radius: 12px;
@@ -147,6 +184,23 @@
             box-shadow: 
                 0 0 20px rgba(144, 108, 255, 0.3),
                 inset 0 0 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-board::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(90deg, transparent 49%, var(--neon-purple) 50%, transparent 51%),
+                linear-gradient(0deg, transparent 49%, var(--neon-purple) 50%, transparent 51%);
+            background-size: 33.33% 100%, 100% 33.33%;
+            opacity: 0.3;
+            pointer-events: none;
         }
 
         .cell {
@@ -159,6 +213,8 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
             border: 1px solid rgba(144, 108, 255, 0.3);
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
         }
@@ -173,12 +229,12 @@
 
         .cell.x {
             color: var(--neon-cyan);
-            text-shadow: 0 0 10px var(--neon-cyan);
+            text-shadow: var(--text-glow);
         }
 
         .cell.o {
             color: var(--neon-pink);
-            text-shadow: 0 0 10px var(--neon-pink);
+            text-shadow: var(--text-glow);
         }
 
         .cell.win {
@@ -198,7 +254,7 @@
             gap: 15px;
             width: 100%;
             max-width: 400px;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         .cyber-button {
@@ -231,7 +287,7 @@
             gap: 10px;
             width: 100%;
             max-width: 400px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .mode-btn {
@@ -258,7 +314,7 @@
             gap: 8px;
             width: 100%;
             max-width: 400px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .difficulty-btn {
@@ -286,7 +342,7 @@
             font-weight: 700;
             text-align: center;
             min-height: 30px;
-            margin: 15px 0;
+            margin: 10px 0;
             padding: 10px 20px;
             border-radius: 8px;
             background: rgba(20, 20, 40, 0.7);
@@ -295,7 +351,7 @@
             width: 100%;
             max-width: 400px;
             color: var(--neon-cyan);
-            text-shadow: 0 0 10px var(--neon-cyan);
+            text-shadow: var(--text-glow);
         }
 
         .win-message {
@@ -306,6 +362,25 @@
             animation: winPulse 2s infinite;
         }
 
+        /* Scanning line effect */
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+            box-shadow: 0 0 10px var(--neon-cyan);
+            animation: scan 3s linear infinite;
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+
         /* Mobile optimizations */
         @media (max-width: 480px) {
             h1 {
@@ -313,7 +388,7 @@
             }
             
             .game-board {
-                gap: 8px;
+                gap: 6px;
                 padding: 10px;
             }
             
@@ -324,7 +399,6 @@
             .game-info {
                 flex-direction: column;
                 gap: 10px;
-                align-items: center;
             }
             
             .score {
@@ -341,9 +415,13 @@
     </style>
 </head>
 <body>
+    <div class="scan-line"></div>
+    
     <div class="container">
-        <div class="header">
-            <h1>КІБЕРПАНК</h1>
+        <div class="cyber-border">
+            <div class="header">
+                <h1>КІБЕРПАНК</h1>
+            </div>
         </div>
         
         <div class="mode-selector">
@@ -352,36 +430,36 @@
         </div>
         
         <div class="difficulty-selector" id="difficulty-container">
-            <button class="difficulty-btn active" data-difficulty="easy">Легко</button>
-            <button class="difficulty-btn" data-difficulty="medium">Середньо</button>
-            <button class="difficulty-btn" data-difficulty="hard">Складно</button>
+            <button class="difficulty-btn active" data-difficulty="easy">ЛЕГКО</button>
+            <button class="difficulty-btn" data-difficulty="medium">СЕРЕДНЬО</button>
+            <button class="difficulty-btn" data-difficulty="hard">СКЛАДНО</button>
         </div>
         
         <div class="game-info">
             <div class="player-turn">
                 <div class="player-icon player-x">X</div>
-                <span>Ваш хід</span>
+                <div class="player-text">ВАШ ХІД</div>
             </div>
             
             <div class="score">
                 <div class="score-item">
                     <div class="score-value" id="score-x">0</div>
-                    <div class="score-label">Перемоги X</div>
+                    <div class="score-label">ПЕРЕМОГИ X</div>
                 </div>
                 <div class="score-item">
                     <div class="score-value" id="score-o">0</div>
-                    <div class="score-label">Перемоги O</div>
+                    <div class="score-label">ПЕРЕМОГИ O</div>
                 </div>
             </div>
         </div>
         
         <div class="game-board" id="board"></div>
         
-        <div class="status-message" id="status">Ваш хід, Гравець X</div>
+        <div class="status-message" id="status">ВАШ ХІД, ГРАВЕЦЬ X</div>
         
         <div class="controls">
             <button class="cyber-button btn-primary" id="reset">
-                <span>Нова гра</span>
+                <span>НОВА ГРА</span>
             </button>
         </div>
     </div>
@@ -444,7 +522,7 @@
                 this.currentPlayer = 'X';
                 this.gameOver = false;
                 this.vsComputer = true;
-                this.difficulty = 'medium';
+                this.difficulty = 'easy';
                 this.scores = { X: 0, O: 0 };
                 this.sound = new SoundGenerator();
                 this.init();
@@ -498,11 +576,11 @@
                     this.gameOver = true;
                     this.sound.playWinSound();
                     this.highlightWinningCells();
-                    this.updateStatus(`${this.currentPlayer} переміг!`);
+                    this.updateStatus(`ГРАВЕЦЬ ${this.currentPlayer} ПЕРЕМІГ!`);
                 } else if (this.isBoardFull()) {
                     this.gameOver = true;
                     this.sound.playDrawSound();
-                    this.updateStatus('Нічия!');
+                    this.updateStatus('НІЧИЯ!');
                 } else {
                     this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
                     this.updateStatus();
@@ -510,71 +588,144 @@
             }
             
             computerMove() {
-                const availableMoves = this.board
-                    .map((cell, index) => cell === '' ? index : null)
-                    .filter(cell => cell !== null);
-                
-                if (availableMoves.length === 0) return;
-                
                 let move;
                 
                 switch(this.difficulty) {
                     case 'easy':
-                        move = this.findWinningMove('O') || 
-                              (Math.random() < 0.5 ? this.findWinningMove('X') : null) ||
-                              availableMoves[Math.floor(Math.random() * availableMoves.length)];
+                        move = this.getEasyMove();
                         break;
                     case 'medium':
-                        move = this.findWinningMove('O') || 
-                              this.findWinningMove('X') || 
-                              (Math.random() < 0.7 ? this.findBestMove() : availableMoves[Math.floor(Math.random() * availableMoves.length)]);
+                        move = this.getMediumMove();
                         break;
                     case 'hard':
-                        move = this.findWinningMove('O') || 
-                              this.findWinningMove('X') || 
-                              this.findBestMove();
+                        move = this.getHardMove();
                         break;
                 }
                 
                 this.makeMove(move);
             }
             
-            findWinningMove(player) {
-                for (let i = 0; i < 9; i++) {
-                    if (this.board[i] === '') {
-                        this.board[i] = player;
-                        const hasWon = this.checkWinner();
-                        this.board[i] = '';
-                        
-                        if (hasWon) return i;
-                    }
-                }
-                return null;
-            }
-            
-            findBestMove() {
-                const center = 4;
-                const corners = [0, 2, 6, 8];
-                const edges = [1, 3, 5, 7];
-                
-                if (this.board[center] === '') return center;
-                
-                for (let corner of corners) {
-                    if (this.board[corner] === '') return corner;
-                }
-                
-                for (let edge of edges) {
-                    if (this.board[edge] === '') return edge;
-                }
-                
+            getEasyMove() {
+                // Випадкові ходи з можливістю помилки
                 const availableMoves = this.board
                     .map((cell, index) => cell === '' ? index : null)
                     .filter(cell => cell !== null);
                 
-                return availableMoves[0];
+                return availableMoves[Math.floor(Math.random() * availableMoves.length)];
             }
             
-            checkWinner() {
+            getMediumMove() {
+                // Спершу спробуємо виграти
+                for (let i = 0; i < 9; i++) {
+                    if (this.board[i] === '') {
+                        this.board[i] = 'O';
+                        if (this.checkWinner()) {
+                            this.board[i] = '';
+                            return i;
+                        }
+                        this.board[i] = '';
+                    }
+                }
+                
+                // Потім спробуємо заблокувати гравця
+                for (let i = 0; i < 9; i++) {
+                    if (this.board[i] === '') {
+                        this.board[i] = 'X';
+                        if (this.checkWinner()) {
+                            this.board[i] = '';
+                            return i;
+                        }
+                        this.board[i] = '';
+                    }
+                }
+                
+                // Іноді робимо випадковий хід для реалістичності
+                if (Math.random() < 0.3) {
+                    return this.getEasyMove();
+                }
+                
+                // Інакше - стратегічний вибір
+                const center = 4;
+                if (this.board[center] === '') return center;
+                
+                const corners = [0, 2, 6, 8];
+                for (let corner of corners) {
+                    if (this.board[corner] === '') return corner;
+                }
+                
+                const edges = [1, 3, 5, 7];
+                for (let edge of edges) {
+                    if (this.board[edge] === '') return edge;
+                }
+                
+                return this.getEasyMove();
+            }
+            
+            getHardMove() {
+                // Алгоритм minimax для складного рівня
+                return this.minimax(this.board.slice(), 'O').index;
+            }
+            
+            minimax(newBoard, player) {
+                const huPlayer = 'X';
+                const aiPlayer = 'O';
+                const availSpots = newBoard.reduce((acc, val, idx) => {
+                    if (val === '') acc.push(idx);
+                    return acc;
+                }, []);
+                
+                // Перевірка на перемогу або нічию
+                if (this.checkWin(newBoard, huPlayer)) {
+                    return {score: -10};
+                } else if (this.checkWin(newBoard, aiPlayer)) {
+                    return {score: 10};
+                } else if (availSpots.length === 0) {
+                    return {score: 0};
+                }
+                
+                const moves = [];
+                
+                for (let i = 0; i < availSpots.length; i++) {
+                    const move = {};
+                    move.index = availSpots[i];
+                    
+                    newBoard[availSpots[i]] = player;
+                    
+                    if (player === aiPlayer) {
+                        const result = this.minimax(newBoard, huPlayer);
+                        move.score = result.score;
+                    } else {
+                        const result = this.minimax(newBoard, aiPlayer);
+                        move.score = result.score;
+                    }
+                    
+                    newBoard[availSpots[i]] = '';
+                    moves.push(move);
+                }
+                
+                let bestMove;
+                if (player === aiPlayer) {
+                    let bestScore = -Infinity;
+                    for (let i = 0; i < moves.length; i++) {
+                        if (moves[i].score > bestScore) {
+                            bestScore = moves[i].score;
+                            bestMove = i;
+                        }
+                    }
+                } else {
+                    let bestScore = Infinity;
+                    for (let i = 0; i < moves.length; i++) {
+                        if (moves[i].score < bestScore) {
+                            bestScore = moves[i].score;
+                            bestMove = i;
+                        }
+                    }
+                }
+                
+                return moves[bestMove];
+            }
+            
+            checkWin(board, player) {
                 const winPatterns = [
                     [0, 1, 2], [3, 4, 5], [6, 7, 8],
                     [0, 3, 6], [1, 4, 7], [2, 5, 8],
@@ -583,11 +734,15 @@
                 
                 for (let pattern of winPatterns) {
                     const [a, b, c] = pattern;
-                    if (this.board[a] && this.board[a] === this.board[b] && this.board[a] === this.board[c]) {
+                    if (board[a] === player && board[b] === player && board[c] === player) {
                         return true;
                     }
                 }
                 return false;
+            }
+            
+            checkWinner() {
+                return this.checkWin(this.board, 'X') || this.checkWin(this.board, 'O');
             }
             
             isBoardFull() {
@@ -618,7 +773,7 @@
                 
                 if (message) {
                     statusElement.textContent = message;
-                    if (message.includes('переміг') || message.includes('Нічия')) {
+                    if (message.includes('ПЕРЕМІГ') || message.includes('НІЧИЯ')) {
                         statusElement.classList.add('win-message');
                     } else {
                         statusElement.classList.remove('win-message');
@@ -629,8 +784,8 @@
                 if (this.gameOver) return;
                 
                 const playerText = this.currentPlayer === 'X' ? 'X' : 'O';
-                const vsComputerText = this.vsComputer && this.currentPlayer === 'O' ? ' (AI)' : '';
-                statusElement.textContent = `Хід гравця ${playerText}${vsComputerText}`;
+                const vsComputerText = this.vsComputer && this.currentPlayer === 'O' ? ` (AI, ${this.difficulty.toUpperCase()})` : '';
+                statusElement.textContent = `ХІД ГРАВЦЯ ${playerText}${vsComputerText}`;
                 statusElement.classList.remove('win-message');
                 
                 const playerTurn = document.querySelector('.player-turn');
@@ -683,6 +838,7 @@
                         difficultyButtons.forEach(btn => btn.classList.remove('active'));
                         button.classList.add('active');
                         this.setDifficulty(button.dataset.difficulty);
+                        this.resetGame();
                     });
                 });
             }
@@ -692,6 +848,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             new TicTacToe();
         });
+
+        // Додаткові заходи для сумісності з iOS
+        document.addEventListener('touchstart', function() {}, {passive: true});
     </script>
 </body>
 </html>
